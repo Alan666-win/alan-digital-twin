@@ -1,0 +1,403 @@
+.statistics-content {
+  display: block;            /* ❌ 不再用 flex */
+  padding: 8px 24px;         /* 大幅压缩 */
+}
+
+/* 三大分区 */
+.stats-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* 统一所有 row 布局 */
+.top-section .row,
+.middle-section .row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  font-size: 16px;
+}
+
+/* 数字样式统一 */
+.value {
+  text-align: right;
+  min-width: 90px;       /* 保证对齐稳定 */
+  font-weight: bold;
+  font-size: 1px;
+  
+}
+
+/* 单位并入 value */
+.value span.unit {
+  font-size: 8px;
+  opacity: 0.6;
+  margin-left: 4px;
+}
+
+/* 底部占比区 */
+.bottom-section {
+  justify-content: flex-end;
+  padding-bottom: 60px;
+}
+
+.ratio-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.ratio-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+}
+
+.ratio-bar {
+  height: 10px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.ratio-fill {
+  height: 100%;
+  width: 0%;
+  transition: width 0.4s ease;
+}
+
+.trend-body {
+  flex: none !important;
+  margin-bottom: 0 !important;
+}
+
+.trend-body {
+  flex: none !important;
+}
+
+.statistics-range {
+  position: static !important;
+  margin-top: 16px;
+}
+
+
+
+/* 三色结构条 */
+.multi-bar {
+  display: flex;
+  height: 10px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.08);
+}
+
+.multi-seg {
+  height: 100%;
+  width: 0%;
+  transition: width 0.4s ease;
+}
+
+.multi-seg.normal  { background: #00c853; }
+.multi-seg.warning { background: #ff9500; }
+.multi-seg.danger  { background: #ff3b30; }
+
+
+.multi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255,255,255,0.75);
+}
+
+.multi-labels {
+  display: flex;
+  gap: 18px;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  white-space: nowrap;        /* 防止换行 */
+  flex-shrink: 0;             /* 防止被压缩 */
+}
+
+.label-normal { color: #00c853; }
+.label-warning { color: #ff9500; }
+.label-danger { color: #ff3b30; }
+
+
+.multi-labels {
+  display: flex;
+  gap: 20px;
+  font-size: 12px;          /* 放大字体 */
+  font-weight: 500;
+  align-items: center;
+}
+
+/* 每个标签项 */
+.label-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  white-space: nowrap;        /* 关键 */
+}
+
+/* 小色块 */
+.label-item i {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+/* 颜色 */
+.label-item.normal i {
+  background: #00c853;
+}
+
+.label-item.warning i {
+  background: #ff9500;
+}
+
+.label-item.danger i {
+  background: #ff3b30;
+}
+
+/* 百分比稍微强调 */
+.label-item span {
+  font-weight: 600;
+}
+
+.multi-bar {
+  display: flex;
+  height: 10px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.08);
+
+  margin-top: 6px;            /* 拉开距离 */
+}
+
+
+
+.trend-change {
+  font-size: 12px;
+  margin-left: 6px;
+  font-weight: 500;
+}
+
+.label-item.normal span { color: #00c853; }
+.label-item.warning span { color: #ff9500; }
+.label-item.danger span { color: #ff3b30; }
+
+
+
+/* ===== 效率卡片优化 ===== */
+
+/* ===== 只作用于效率指标 ===== */
+
+.efficiency-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+/* .efficiency-cards .stat-card {
+  text-align: center;
+} */
+
+.efficiency-cards .card-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* .efficiency-cards .card-value {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px;
+  min-height: 28px;
+} */
+
+
+
+/* ===== 效率指标 左对齐版 ===== */
+
+.efficiency-cards .stat-card {
+  text-align: left;
+}
+
+.efficiency-cards .card-value {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
+  gap: 6px;
+  color: rgba(220, 245, 255, 0.9);
+}
+
+.efficiency-cards .card-label {
+  margin-top: 6px;
+}
+
+.efficiency-cards .card-value span:first-child {
+  min-width: auto;
+  text-align: right;
+}
+
+.efficiency-cards .trend-change {
+  min-width: 20px;
+  display: inline-block;
+}
+
+
+/* ===== 顶部8个指标 左对齐优化 ===== */
+
+.stats-cards:not(.efficiency-cards) .stat-card {
+  text-align: left;
+}
+
+/* .stats-cards:not(.efficiency-cards) .card-value {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
+  gap: 8px;
+} */
+
+
+.stats-cards:not(.efficiency-cards) .card-value {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
+  gap: 4px;
+  padding-left: 0;
+}
+.stats-cards:not(.efficiency-cards) .card-label {
+  margin-top: 4px;
+}
+
+
+.stats-cards:not(.efficiency-cards) .trend-change {
+  min-width: 10px;
+  text-align: left;
+}
+
+
+.stats-cards:not(.efficiency-cards) .stat-card {
+  padding-left: 4px;
+}
+
+
+.ranking-section {
+  margin-top: 20px;
+}
+
+.ranking-title {
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: rgba(255,255,255,0.75);
+}
+
+.ranking-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 13px;
+  color: rgba(255,255,255,0.75);
+}
+
+.rank-index {
+  color: #ff4d4f;
+  width: 20px;
+}
+
+.rank-score {
+  color: #00c853;
+}
+
+
+.efficiency-cards {
+  margin-top: 32px;
+  padding-top: 20px;
+  padding-right: 90px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+
+
+/* ===== 时间切换样式 ===== */
+
+.statistics-range {
+  display: flex;
+  gap: 28px;
+  margin-top: 24px;
+  font-size: 15px;
+  cursor: pointer;
+  user-select: none;
+  margin-left: 20px; 
+}
+
+.statistics-range .range {
+  position: relative;
+  color: rgba(255,255,255,0.65);
+  transition: all 0.2s ease;
+}
+
+.statistics-range .range:hover {
+  color: #ffffff;
+}
+
+.statistics-range .range.active {
+  color: #00e5ff;
+}
+
+.statistics-range .range.active::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 2px;
+  background: #00e5ff;
+  border-radius: 2px;
+}
+
+
+.role-btn::after {
+  
+  font-size: 12px;
+  margin-left: 6px;
+  opacity: 0.8;
+}
+
+.role-btn {
+  cursor: pointer;
+}
+
+.role-btn:hover {
+  transform: translateY(-2px);
+}
+
+
+
+
+
+
+
+
+
+/* ==============================
+   只作用于统计面板
+============================== */
+
+
+
+
+.statistics-body {
+  display: block;
+  height: auto;
+}
+
+

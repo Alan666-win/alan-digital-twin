@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Three.js中文网：http://www.webgl3d.cn/</title>
+  <style>
+
+/* =====================================================
+   全局基础
+===================================================== */
+
+
+/* =====================================================
+   全局基础
+===================================================== */
+
+
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+#app {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  
+}
+
+
+
+.info-panel {
+  position: relative;
+  box-sizing: border-box;
+  pointer-events: none; /* 防止遮挡射线 */
+}
+
+.info-panel .panel {
+  min-width: 320px;
+  padding: 18px 22px;
+
+  background: rgba(0, 30, 45, 0.55);
+  border-radius: 16px;
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  box-shadow: 0 0 24px rgba(0, 255, 255, 0.45);
+
+  color: #ffffff;
+  font-size: 14px;
+}
+
+/* 边框强调 */
+.info-panel.status-warning .panel {
+  border: 2px solid #faad14;
+}
+
+.info-panel.status-danger .panel {
+  border: 2px solid #ff4d4f;
+}
+
+/* =====================================================
+   面板头部
+===================================================== */
+
+.info-panel .panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  padding-bottom: 12px;
+  margin-bottom: 14px;
+
+  border-bottom: 1px solid rgba(255,255,255,0.25);
+}
+
+.info-panel .warehouse-name {
+  opacity: 0.7;
+}
+
+.info-panel .warehouse-time {
+  font-size: 12px;                 /* 稍微小一点 */
+  color: rgba(255, 255, 255, 0.75); /* 白色但偏淡 */
+  letter-spacing: 0.5px;           /* 稍微拉开一点 */
+}
+
+/* =====================================================
+   面板建议区
+===================================================== */
+
+.info-panel .panel-suggestions {
+  margin-bottom: 14px;
+}
+
+.risk-tip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.risk-tip .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* 状态圆点 */
+.risk-tip.normal .dot  { background: #38d89b; }
+.risk-tip.warning .dot { background: #f7b733; }   /* 柔和金黄 */
+.risk-tip.danger  .dot { background: #ff4d4f; }
+
+/* 状态文字（升级版） */
+.risk-tip.normal .text {
+  color: rgba(56, 216, 155, 0.9);
+  font-weight: 500;
+}
+
+.risk-tip.warning .text {
+  color: rgba(247, 183, 51, 0.85);  /* 柔化黄色 */
+  font-weight: 500;                /* 降低一点重量 */
+  letter-spacing: 1px;             /* 增加字距 */
+}
+
+.risk-tip.danger .text {
+  color: rgba(255, 77, 79, 0.9);
+  font-weight: 500;
+}
+
+/* =====================================================
+   面板详情区
+===================================================== */
+
+.info-panel .panel-details {
+  margin-top: 10px;
+}
+
+.info-panel .row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 8px 0;
+  font-size: 14px;
+}
+
+.info-panel .row .left {
+  display: flex;
+  align-items: center;
+}
+
+.info-panel .icon {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  object-fit: contain;
+}
+
+.info-panel .label {
+  color: rgba(255, 255, 255, 0.75);
+  font-weight: 500;
+}
+
+/* 默认绿色数值 */
+.info-panel .value,
+.info-panel .unit {
+  color: #38d89b;
+  font-weight: 500;
+}
+
+/* 指标状态 */
+.info-panel .row.indicator.warning .value,
+.info-panel .row.indicator.warning .unit {
+  color: #faad14;
+}
+
+.info-panel .row.indicator.danger .value,
+.info-panel .row.indicator.danger .unit {
+  color: #ff4d4f;
+}
+
+
+
+/* =====================================================
+   仓顶风险标签（工业竖向最终版）
+===================================================== */
+
+.risk-plate {
+  position: relative;
+  display: inline-block;
+  pointer-events: none;
+
+  background: rgba(6, 12, 18, 0.75); /* 更深更稳 */
+  border: 1px solid rgba(255, 255, 255, 0.12); /* 降低边框亮度 */
+  border-radius: 10px;
+
+  padding: 10px 8px 8px 8px;
+
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.45),
+    0 0 18px rgba(0, 0, 0, 0.25);
+
+  color: rgba(255, 255, 255, 0.75); /* 柔白 */
+  font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+}
+
+
+/* 中风险更矮 */
+.risk-plate.warning {
+  height: 128px;
+  width: 40px;
+}
+
+/* 高风险更高 */
+.risk-plate.danger {
+  height: 176px;
+  width: 50px;
+}
+
+
+/* 左侧风险色条（柔化） */
+.risk-plate::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 6px;
+  border-radius: 10px;
+  opacity: 0.85; /* 降低强度 */
+}
+
+.risk-plate.warning::before {
+  background: rgba(247, 183, 51, 0.75); /* 柔金黄 */
+  box-shadow: 0 0 8px rgba(247, 183, 51, 0.25);
+}
+
+.risk-plate.danger::before {
+  background: rgba(255, 77, 79, 0.75); /* 稳红 */
+  box-shadow: 0 0 10px rgba(255, 77, 79, 0.28);
+}
+
+
+/* 内部结构 */
+.risk-plate-inner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 35px;
+  gap: 10px;
+  position: relative;
+}
+
+
+/* 顶部呼吸灯（克制版） */
+.risk-dot {
+  position: absolute;
+  top: 10px;
+  width: 6px; /* 略微缩小 */
+  height: 6px;
+  border-radius: 999px;
+  animation: riskDotPulse 3.2s ease-in-out infinite;
+}
+
+.risk-plate.warning .risk-dot {
+  background: rgba(247, 183, 51, 0.75);
+  box-shadow:
+    0 0 6px rgba(247, 183, 51, 0.35),
+    0 0 12px rgba(247, 183, 51, 0.18);
+}
+
+.risk-plate.danger .risk-dot {
+  background: rgba(255, 77, 79, 0.75);
+  box-shadow:
+    0 0 8px rgba(255, 77, 79, 0.4),
+    0 0 16px rgba(255, 77, 79, 0.22);
+}
+
+
+/* 呼吸动画（更稳） */
+@keyframes riskDotPulse {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  50%  { transform: scale(1.15); opacity: 0.95; }
+  100% { transform: scale(1);   opacity: 0.6; }
+}
+
+
+/* 主标题（竖排） */
+.risk-title {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  font-size: 21px; /* 略微收一点 */
+  letter-spacing: 2px;
+  line-height: 1;
+  color: rgba(255,255,255,0.65);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+
+/* 高风险底部小字 */
+.risk-sub {
+  position: absolute;
+  bottom: 30px;
+
+  left: 20px;
+  right: 15px;
+
+  text-align: center;
+  font-size: 11px; /* 稍微小一点 */
+  letter-spacing: 2px; /* 降低字距 */
+  color: rgba(255, 255, 255, 0.75); /* 更淡 */
+}
+
+
+/* 对齐结构保持不动 */
+.risk-anchor-wrap {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -100%);
+  pointer-events: none;
+}
+
+
+/* =====================================================
+   动画
+===================================================== */
+
+@keyframes risk-pulse {
+  0%   { transform: scale(0.85); opacity: 0.6; }
+  50%  { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(0.85); opacity: 0.6; }
+}
+
+/* =====================================================
+   全屏提示
+===================================================== */
+
+#screen-tip {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 99999;
+
+  padding: 8px 14px;
+  border-radius: 6px;
+
+  background: rgba(0, 0, 0, 0.55);
+  color: #ffffff;
+  font-size: 14px;
+
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+#screen-tip.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#screen-tip .key {
+  display: inline-block;
+  padding: 2px 6px;
+  margin: 0 2px;
+
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  font-weight: 600;
+}
+
+.panel-details .row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.row .icon {
+  width: 24px;
+}
+
+.row .label {
+  flex: 1;
+  margin-left: 6px;
+}
+
+.row .value {
+  text-align: right;
+  min-width: 60px;
+  margin-right: 4px;
+}
+
+.row .unit {
+  color: #4ce0b3;
+  min-width: 30px;
+  text-align: left;
+}
+
+.warehouse-time {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;   /* ⭐ 关键：右对齐 */
+  text-align: right;       /* 保证文本对齐 */
+}
+
+
+
+
+
+
+
+/* ==============================
+   趋势按钮
+============================== */
+.trend-btn {
+  /* ❌ 删除 fixed 定位 */
+  position: relative;
+  z-index: 1;
+
+  margin-left: 10px;   /* 和统计数字拉开间距 */
+
+  
+  border-radius: 20px;
+
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  backdrop-filter: blur(6px);
+  transition: all 0.3s ease;
+}
+
+.trend-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+
+/* ==============================
+   趋势滑出面板
+============================== */
+
+/* ==============================
+   趋势滑出面板
+============================== */
+
+/* ============================== */
+/* 趋势滑出面板 */
+/* ============================== */
+
+:root {
+  --trend-padding-x: 46px;
+}
+
+.trend-panel {
+  
+  top: 0;
+  
+  width: 420px;
+  height: 100vh;
+  z-index: 9999;
+
+  display: flex;
+  flex-direction: column;
+
+  background: rgba(0, 20, 30, 0.25);
+  backdrop-filter: blur(10px);
+  transition: right 0.4s ease;
+}
+
+
+
+/* ============================== */
+/* 头部 */
+/* ============================== */
+
+.trend-header {
+  padding: 16px var(--trend-padding-x);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  color: #ffffff;
+}
+
+/* ============================== */
+/* Tabs */
+/* ============================== */
+
+.trend-tabs {
+  display: flex;
+  gap: 16px;
+  padding: 12px var(--trend-padding-x);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.trend-tabs .tab {
+  cursor: pointer;
+  font-size: 14px;
+  color: rgba(255,255,255,0.75);
+  padding-bottom: 4px;
+}
+
+.trend-tabs .tab.active {
+  color: #00F0FF;
+  border-bottom: 2px solid #00F0FF;
+}
+
+/* ============================== */
+/* 主体容器 */
+/* ============================== */
+
+.trend-body {
+  
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 40px;
+}
+
+/* ============================== */
+/* 图表区域 */
+/* ============================== */
+
+
+
+/* ============================== */
+/* 下方说明 + 统计 */
+/* ============================== */
+
+.trend-footer {
+  flex-shrink: 0;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  padding: 16px var(--trend-padding-x);
+  font-size: 13px;
+  color: #ffffff;
+
+  border-top: 1px solid rgba(255,255,255,0.08);
+  background: rgba(0,0,0,0.06);
+
+  margin-top: 40px;
+  
+
+  
+}
+
+/* 左侧区间说明 */
+
+.trend-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+  min-width: 150px;
+  color: rgba(255,255,255,0.7d5);
+}
+
+/* 右侧异常统计 */
+
+.trend-stats {
+  text-align: left;
+  line-height: 1.3;
+   margin-right: 12px;
+}
+
+.trend-stats-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+  transform: none;
+  margin-left:0;
+  
+  color: rgba(255,255,255,0.75);;
+}
+
+.trend-stats .danger {
+  color: #ff4d4f;
+}
+
+.trend-stats .warning {
+  color: #faad14;
+}
+
+/* ============================== */
+/* 时间范围选择 */
+/* ============================== */
+
+.trend-range {
+  padding: 10px var(--trend-padding-x);
+  display: flex;
+  gap: 20px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.75);
+  border-top: 1px solid rgba(255,255,255,0.05);
+  
+  position: absolute;   /* 新增 */
+  bottom: 10px;         /* 新增 */
+  left: 0;              /* 新增 */
+  right: 0; 
+}
+
+.trend-range .range {
+  cursor: pointer;
+}
+
+.trend-range .range.active {
+  color: #00F0FF;
+  border-bottom: 2px solid #00F0FF;
+}
+
+.trend-panel.open ~ .trend-btn {
+  display: none !important;
+} 
+
+
+#role-switcher {
+  position: fixed;
+  top: 70px;              /* 在统计气泡下面 */
+  right: 20px;            /* 右对齐 */
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px 18px;
+
+  background: rgba(0, 40, 55, 0.85);
+  backdrop-filter: blur(8px);
+
+  border-radius: 30px;    /* 胶囊圆角 */
+
+  box-shadow: 
+    0 0 12px rgba(0, 255, 255, 0.15),
+    inset 0 0 8px rgba(0, 255, 255, 0.05);
+
+  border: 1px solid rgba(0, 255, 255, 0.2);
+
+  color: rgba(255,255,255,0.75);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+
+#role-switcher select {
+  background: transparent;
+  color: rgba(255,255,255,0.75);
+
+  border: none;
+  outline: none;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
+}
+
+#role-switcher:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 0 18px rgba(0, 255, 255, 0.25),
+    inset 0 0 10px rgba(0, 255, 255, 0.08);
+  transition: 0.3s ease;
+}
+
+
+
+#right-control {
+  position: absolute;
+  right: 32px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items:stretch;
+  
+  z-index: 200;
+}
+
+
+.control-btn:hover {
+  background: rgba(0,200,255,0.2);
+}
+
+.control-btn.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+  background: rgba(80, 80, 80, 0.6);
+}
+
+
+
+/* ==============================
+   统一抽屉系统
+============================== */
+
+.app-drawer {
+  position: fixed;
+  top: 0;
+  right: -420px;              /* 默认隐藏在右侧 */
+  width: 420px;
+  height: 100vh;
+
+  background: linear-gradient(
+    160deg,
+    rgba(8, 35, 45, 0.85),
+    rgba(4, 25, 35, 0.92)
+  );
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  border-left: 1px solid rgba(0, 255, 255, 0.15);
+
+  box-shadow: -10px 0 40px rgba(0, 255, 255, 0.08),
+    inset 0 0 40px rgba(0, 255, 255, 0.04);
+
+  display: flex;
+  flex-direction: column;
+
+  transition: right 0.3s ease;
+
+  z-index: 9999;
+}
+
+.app-drawer.open {
+  right: 0;                   /* 打开时滑入 */
+}
+
+/* ==============================
+   抽屉头部
+============================== */
+
+.drawer-header {
+  
+  height: 60px;
+  padding: 0 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+
+  font-size: 22px;
+  font-weight: bold;
+  color: rgba(255,255,255,0.90);
+  letter-spacing:2px;
+  margin-left:20px;
+}
+
+.drawer-close {
+  cursor: pointer;
+  font-size: 18px;
+  opacity: 0.6;
+  transition: 0.2s;
+}
+
+.drawer-close:hover {
+  opacity: 1;
+}
+
+/* ==============================
+   抽屉主体
+============================== */
+
+.drawer-body {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+
+
+
+.drawer-header {
+  position: relative;
+}
+
+.drawer-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 20px;
+  right: 20px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0,255,255,0.5),
+    transparent
+  );
+}
+
+
+/* 面板滑出弹性曲线 */
+
+.app-drawer {
+  transform: translateX(100%);
+  transition: transform 0.45s cubic-bezier(.23,1.02,.32,1);
+}
+
+.app-drawer.open {
+  transform: translateX(0);
+}
+
+
+.stat-card {
+  transition: all 0.25s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0,255,255,0.08);
+}
+
+
+
+
+
+
+
+
+/* ==============================
+   报警历史统一风格
+============================== */
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.history-item {
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  font-size: 14px;
+}
+
+.history-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.history-title {
+  font-weight: 600;
+}
+
+.history-item.warning .history-title {
+  color: #faad14;
+}
+
+.history-item.danger .history-title {
+  color: #ff4d4f;
+}
+
+.history-status {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.history-status.open {
+  color: #ff4d4f;
+}
+
+.history-status.acknowledged {
+  color: #1890ff;
+}
+
+.history-status.closed {
+  color: #52c41a;
+}
+
+.history-time {
+  margin-top: 6px;
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.history-confirm {
+  margin-top: 10px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: #1890ff;
+  color: #ffffff;
+  font-size: 12px;
+  transition: 0.2s;
+}
+
+.history-confirm:hover {
+  opacity: 0.8;
+}
+
+.history-empty {
+  padding: 20px;
+  opacity: 0.6;
+}
+
+/* 趋势图容器 */
+.trend-chart {
+  width: 100%;
+  height: 45vh;
+  max-height: 350px;
+}
+
+
+/* .drawer-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+  position: relative;
+} */
+
+
+.drawer-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: auto;
+  position: relative;
+  min-height:100%;
+}
+
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+.stat-row span:last-child {
+  font-weight: 600;
+}
+
+.stat-row em {
+  font-style: normal;
+  font-size: 12px;
+  opacity: 0.6;
+  margin-left: 2px;
+}
+
+/* 颜色分层 */
+
+.stat-row.danger span:last-child {
+  color: #ff4d4f;
+}
+
+.stat-row.warning span:last-child {
+  color: #faad14;
+}
+
+.stat-row.normal span:last-child {
+  color: #ffffff;
+}
+
+
+
+/* =========================
+   强压紧凑版统计面板
+========================= */
+
+/* 把抽屉主体也压缩 */
+.drawer-body {
+  padding: 8px 14px !important;
+}
+
+/* 统计整体容器 */
+.statistics-content {
+  display: flex;
+  flex-direction: column;
+
+  padding: 4px 0px 0 20px !important;   /* 顶部直接砍掉 */
+  gap: 6px !important;                 /* 原来 40px 那种全部废掉 */
+}
+
+/* 两排卡片 */
+.stats-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 0 !important;
+}
+
+/* 第二排紧贴第一排 */
+.stats-cards + .stats-cards {
+  margin-top: 0 !important;
+}
+
+/* 卡片高度直接压缩 */
+.stat-card {
+  height: 50px;                 /* 原来 100+ */
+  padding: 10px 4px;
+}
+
+/* 数字区域锁死高度 */
+.card-value {
+  font-size: 18px;
+  height: 26px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+/* 单位 */
+.card-value .unit {
+  font-size: 13px;
+}
+
+/* 标签固定高度防止抖动 */
+.card-label {
+  font-size: 13px;
+  height: 16px;
+  line-height: 1;
+  color: rgba(255,255,255,0.6);
+}
+
+/* 风险条贴卡片 */
+.bottom-section {
+  margin-top: 4px !important;
+}
+
+
+.card-value {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  color:rgba(255,255,255,0.75);
+}
+
+.trend-change {
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: 2px;
+  line-height: 1;
+}
+
+.role-menu {
+  background: rgba(10, 20, 30, 0.95);
+  border-radius: 14px;
+
+  backdrop-filter: blur(8px);
+
+  padding: 6px 0;
+
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+
+  display: none;
+
+  min-width: 80px;   /* ⭐ 固定宽度 */
+
+  
+}
+
+.role-menu {
+  position: absolute;
+  right: 10%;
+  top: 6px;
+  margin-left: 50px;
+}
+
+.role-menu-item {
+  padding: 8px 18px;   /* ⭐ 更紧凑 */
+  font-size: 14px;
+
+  cursor: pointer;
+  color: rgba(255,255,255,0.75);
+
+  transition: background 0.2s ease;
+}
+
+.role-menu-item:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.role-menu-item.active {
+  color: #38d89b;
+  font-weight: 600;
+}
+
+
+
+
+/* .control-btn {
+  width: fit-content;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  padding: 16px 26px;
+  border-radius: 20px;
+
+  background: rgba(8, 25, 35, 0.92);
+  border: 1px solid rgba(0, 200, 255, 0.25);
+
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 500;
+
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+} */
+
+
+.control-btn {
+        /* 自适应宽度 */
+  min-width: 10px;         /* 不至于太短 */
+
+  padding: 8px 16px;      /* ⭐ 变薄 */
+  border-radius: 14px;      /* ⭐ 圆角小一点 */
+
+  font-size: 15px;          /* ⭐ 稍微小一点 */
+
+  display: flex;
+  
+  justify-content: center;  /* 居中文字 */
+
+  background: rgba(8, 25, 35, 0.92);
+  border: 1px solid rgba(0, 200, 255, 0.25);
+
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  align-self: flex-end;
+}
+
+.control-btn {
+  position: relative;
+  padding: 10px 14px;
+  border-radius: 16px;
+
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 1px;
+
+  color: rgba(255, 255, 255, 0.75);
+
+  background: linear-gradient(
+    145deg,
+    rgba(0, 35, 45, 0.7),
+    rgba(0, 20, 30, 0.8)
+  );
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  border: 1px solid rgba(0, 255, 255, 0.15);
+
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.3),
+    inset 0 0 12px rgba(0, 255, 255, 0.05);
+
+  transition: all 0.3s cubic-bezier(.23,1.02,.32,1);
+}
+
+.control-btn:hover {
+  transform: translateY(-4px);
+
+  border: 1px solid rgba(0, 255, 255, 0.35);
+
+  box-shadow:
+    0 12px 28px rgba(0, 255, 255, 0.15),
+    inset 0 0 16px rgba(0, 255, 255, 0.1);
+}
+
+
+
+
+.control-btn.active {
+  background: linear-gradient(
+    145deg,
+    rgba(0, 60, 70, 0.8),
+    rgba(0, 35, 45, 0.9)
+  );
+
+  border: 1px solid rgba(0,255,255,0.6);
+
+  box-shadow:
+    0 0 20px rgba(0,255,255,0.25),
+    inset 0 0 20px rgba(0,255,255,0.15);
+}
+
+.control-btn {
+  clip-path: polygon(
+    0 0,
+    90% 0,
+    100% 20%,
+    100% 100%,
+    0 100%
+  );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.trend-legend-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: rgba(255,255,255,0.75);
+}
+
+
+.multi-bar {
+  position: relative;
+}
+
+.multi-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(0,255,255,0.15);
+  pointer-events: none;
+}
+
+
+.multi-bar {
+  position: relative;
+}
+
+.multi-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  box-shadow: 0 0 12px rgba(0,255,255,0.15);
+  pointer-events: none;
+}
+
+
+.card-value {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.unit {
+  opacity: 0.7;
+  font-size: 14px;
+}
+
+
+.app-drawer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 80% 20%,
+    rgba(0,255,255,0.08),
+    transparent 60%
+  );
+  pointer-events: none;
+}
+
+.app-drawer {
+  border-left: 2px solid rgba(0,255,255,0.2);
+}
+
+@keyframes glowPulse {
+  0% { text-shadow: 0 0 4px #ff4d4f; }
+  50% { text-shadow: 0 0 14px #ff4d4f; }
+  100% { text-shadow: 0 0 4px #ff4d4f; }
+}
+
+.danger-text {
+  animation: glowPulse 2s infinite;
+}
+
+.app-drawer.open ~ canvas {
+  filter: brightness(0.7);
+}
+
+/* ===== 数值层级优化 ===== */
+
+.info-panel .value {
+  font-size: 15px;   /* 建议 16~18 之间 */
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.info-panel .label {
+  color: rgba(255, 255, 255, 0.75);
+  letter-spacing: 1px;
+}
+
+.info-panel .value,
+.info-panel .unit {
+  color: rgba(56, 216, 155, 0.8);
+  text-shadow: 0 0 4px rgba(56, 216, 155, 0.2);
+}
+
+
+
+
+
+/* ==============================
+   工业版角色气泡
+============================== */
+
+.role-menu {
+  min-width: 40px;
+  padding: 12px 18px;
+
+  background: linear-gradient(
+    145deg,
+    rgba(0, 40, 55, 0.92),
+    rgba(0, 30, 45, 0.85)
+  );
+
+  backdrop-filter: blur(12px);
+
+  border-radius: 16px;
+
+  border: 1px solid rgba(0, 255, 255, 0.08);
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.4);
+
+  opacity: 0;
+  transform: translateX(6px);
+  transition: all 0.18s ease;
+
+  z-index: 9999;
+}
+
+/* 打开状态 */
+.role-menu.open {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* 居中箭头 */
+.role-menu::after {
+  content: '';
+  position: absolute;
+  top: 18%;
+  right: -6px;
+
+  width: 10px;
+  height: 10px;
+
+  background: rgba(0, 35, 50, 0.95);
+
+  transform: translateY(-50%) rotate(45deg);
+
+  border-radius: 2px;
+}
+
+/* 菜单项 */
+.role-menu-item {
+  padding: 8px 0;
+
+  font-size: 14px;
+
+  color: rgba(255,255,255,0.72);
+
+  cursor: pointer;
+
+  transition: all 0.15s ease;
+}
+
+.role-menu-item:hover {
+  color: rgba(255,255,255,0.9);
+}
+
+.role-menu-item.active {
+  color: #38d89b;
+}
+
+
+.role-menu {
+  position: fixed;
+}
+
+
+.role-menu-item.active {
+  color: #38d89b;
+  text-shadow: 0 0 6px rgba(56,216,155,0.4);
+}
+
+.role-menu-item.active {
+  color: #38d89b;
+  text-shadow: 0 0 6px rgba(56,216,155,0.4);
+}
+
+
+.statistics-panel {
+  height: auto !important;
+}
+
+
+
+
+
+
+
+
+
+
+.ranking-item {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ranking-item:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.ranking-item.active {
+  background: rgba(0,229,255,0.12);
+  border-left: 3px solid #00e5ff;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </style>
+
+  <link rel="stylesheet" href="./features/statusSummary/statusSummary.css">
+
+  <link rel="stylesheet" href="./features/statisticsPanel/statisticsPanel.css">
+
+</head>
+
+
+
+
+
+
+
+
+
+
+<body>
+  <div id="app">
+
+    <!-- ⭐ 全屏提示 -->
+    <div id="screen-tip">
+      按 <span class="key">F</span> 进入全屏 ｜ 
+      <span class="key">ESC</span> 退出全屏
+    </div>
+
+  </div>
+
+
+
+
+<div id="ui-root">
+  <div id="status-root"></div>   <!-- 胶囊专属 -->
+  <div id="right-control"></div>
+  <div id="drawer-root"></div>
+</div>
+
+
+
+
+
+
+  <script type="module" src="./main.js"></script>
+</body>
+
+
+</html>

@@ -1,0 +1,141 @@
+/* ===============================
+   仓级状态统计（极简）
+=============================== */
+
+#status-summary {
+  z-index: 20;
+  position: relative;
+  margin-bottom: 16px;
+
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  padding: 8px 14px;
+  border-radius: 999px;
+
+  background: rgba(10, 15, 20, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  /* ⭐ 关键修复：允许内部按钮点击 */
+  pointer-events: auto;
+
+  transition: box-shadow 0.4s ease;
+}
+
+
+/* ===============================
+   胶囊项
+=============================== */
+
+#status-summary .item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+#status-summary .num {
+  font-weight: 600;
+}
+
+#status-root {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  z-index: 300;
+}
+
+
+/* ===============================
+   圆点
+=============================== */
+
+#status-summary .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+/* 颜色体系（与你项目统一） */
+#status-summary .normal .dot {
+  background: #38d89b;
+}
+
+#status-summary .warning .dot {
+  background: #faad14;
+}
+
+#status-summary .danger .dot {
+  background: #ff4d4f;
+}
+
+
+#status-summary .normal .dot {
+  background: rgba(56, 216, 155, 0.75);
+  box-shadow: 0 0 6px rgba(56, 216, 155, 0.15);
+}
+
+#status-summary .warning .dot {
+  background: rgba(247, 183, 51, 0.8);
+  box-shadow: 0 0 6px rgba(247, 183, 51, 0.15);
+}
+
+#status-summary .danger .dot {
+  background: rgba(255, 77, 79, 0.85);
+  box-shadow: 0 0 8px rgba(255, 77, 79, 0.18);
+}
+
+/* ===============================
+   ⭐ 高危一次性提示（只闪一次）
+=============================== */
+
+#status-summary.danger-alert {
+  box-shadow:
+    0 0 0 2px rgba(255, 77, 79, 0.35),
+    0 0 16px rgba(255, 77, 79, 0.55);
+}
+
+
+/* ===============================
+   清除报警按钮
+=============================== */
+
+#clear-alert-btn {
+  margin-left: 16px;
+  padding: 6px 12px;
+
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+
+  background: #ff4d4f;
+  color: #fff;
+  font-size: 12px;
+
+  pointer-events: auto;
+
+  transition: all 0.2s ease;
+}
+
+#clear-alert-btn:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+
+/* ===== 修复全屏底部空白 ===== */
+.statistics-content {
+  flex: none !important;
+}
+
+.bottom-section {
+  padding-bottom: 10px !important;
+}
+
+.drawer-body:has(.statistics-content) {
+  justify-content: flex-start !important;
+}
