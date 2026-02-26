@@ -1,7 +1,7 @@
 
 // 引入 Three.js
-import * as THREE from '../../../three.js-r123/build/three.module.js';
-import { OrbitControls } from '../../../three.js-r123/examples/jsm/controls/OrbitControls.js';
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.123.0/build/three.module.js';
+import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.123.0/examples/jsm/controls/OrbitControls.js';
 
 // ==============================
 // 1️⃣ 相机（⚠️ 不再使用固定 width / height）
