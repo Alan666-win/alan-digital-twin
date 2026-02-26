@@ -135,7 +135,7 @@ import { labelRenderer } from './messageTag.js';
 import { granaryArr } from './scene/model.js';
 import { statusMap } from './data/statusStore.js';
 
-import * as THREE from '../../../three.js-r123/build/three.module.js';
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.123.0/build/three.module.js';
 import { updateAlertLabels } from './features/alertLabel/alertLabel.js';
 import { activeTarget } from './features/raycastInfo/choose.js';
 
