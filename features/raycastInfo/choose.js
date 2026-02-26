@@ -118,7 +118,7 @@
 
 
 
-import * as THREE from '../../../../../three.js-r123/build/three.module.js';
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.123.0/build/three.module.js';
 import { camera, renderer } from '../../RendererCamera.js';
 import { scene } from '../../scene/index.js';
 

@@ -4,8 +4,8 @@
 // 模型加载 + 仓体绑定（最终稳定版）
 // ==============================
 
-import * as THREE from '../../../../three.js-r123/build/three.module.js';
-import { GLTFLoader } from '../../../../three.js-r123/examples/jsm/loaders/GLTFLoader.js';
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.123.0/build/three.module.js';
+import { GLTFLoader } from 'https://cdn.jsdelivr.net/npm/three@0.123.0/examples/jsm/loaders/GLTFLoader.js';
 import messageData from '../messageData.js';
 
 const model = new THREE.Group();

@@ -4,7 +4,7 @@
 import {
   CSS2DRenderer,
   CSS2DObject
-} from '../../../three.js-r123/examples/jsm/renderers/CSS2DRenderer.js';
+} from 'https://cdn.jsdelivr.net/npm/three@0.123.0/examples/jsm/renderers/CSS2DRenderer.js';
 
 // ==============================
 // 创建一个 HTML 标签（用于仓库标注）
