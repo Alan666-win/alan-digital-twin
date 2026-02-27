@@ -3,7 +3,10 @@
 
 // 2-16
 
-import { CSS2DRenderer } from '../../three.js-r123/examples/jsm/renderers/CSS2DRenderer.js';
+import {
+  CSS2DRenderer,
+  CSS2DObject
+} from '../../three.js-r123/examples/jsm/renderers/CSS2DRenderer.js';
 import { statusDetailMap } from '../../data/statusStore.js';
 
 function animateNumber(el, to, duration = 800) {
@@ -198,12 +201,12 @@ export function createInfoPanel(data) {
   const panelObj = new CSS2DObject(root);
   panelObj.renderOrder = 9999;
 
-  requestAnimationFrame(() => {
-    const container = document.querySelector('.css2d-renderer');
-    if (container) {
-      container.appendChild(root);
-    }
-  });
+  // requestAnimationFrame(() => {
+  //   const container = document.querySelector('.css2d-renderer');
+  //   if (container) {
+  //     container.appendChild(root);
+  //   }
+  // });
 
   return panelObj;
 }
