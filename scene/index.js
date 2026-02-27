@@ -1,6 +1,6 @@
 // 场景总文件
 // 引入Three.js
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.123.0/build/three.module.js';
+import * as THREE from '../three.js-r123/build/three.module.js';
 import { model } from './model.js';
 
 

@@ -6,7 +6,7 @@
 
 
 
-import * as echarts from 'https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.esm.min.js';
+import * as echarts from '../../echarts.esm.min.js';
 import { activeTarget } from '../raycastInfo/choose.js';
 import { hasPermission } from '../../data/permission.js';
 
